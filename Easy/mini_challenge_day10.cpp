@@ -27,4 +27,76 @@ inicio:
         imprimir("{nombre} tiene {nota}") - esto de menor a mayor
 
 fin
-        */
+*/
+
+// inicio de challenge:
+
+// para manejar los strings 
+#include <string>
+// para manejar las entradas y salidas por terminal 
+#include <iostream>
+// para manejar listas sin tener que hacer nodos a mano 
+#include <vector>
+// para poder usar un algoritmo para ordenar de menor a mayor 
+#include <algorithm>
+// para poder encontrar las propiedades y limites fisicos de tipos de datos numericos 
+#include <limits>
+
+using namespace std;
+
+// estructura para guardar al estudiante y su nota
+struct Estudiante {
+    string nombre;
+    double nota;
+};
+
+int main() {
+    int cantidad_estudiantes;
+
+    cout << "Ingrese la cantidad de estudiantes de grado: ";
+    if (!(cin >> cantidad_estudiantes) || cantidad_estudiantes <= 0) {
+        cerr << "el valor puesto es invalido";
+        return 1;
+    };
+
+    // Quitar del buffer el salto de linea que sobro de hacer cin int
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    //crear el vecto que contenga a todos los alumnos 
+    vector<Estudiante> estudiantes;
+
+    estudiantes.reserve(cantidad_estudiantes);
+
+    for (int i = 0; i < cantidad_estudiantes; i++){
+        Estudiante e;
+
+        cout<< "ingrese el nombre del estudiante " << i + 1 << ": ";
+        if (!getline(cin, e.nombre)) {
+            cerr << "error al leer linea"; return 1;
+        }
+
+        cout << "ingrese la nota del estudiante: ";
+        if (!(cin >> e.nota)) {
+            cerr << "Error nota no valida";
+            return 1;
+        }
+
+        //volvemos a borrar del buffer el salto de linea 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        //metemos todo la estructura "e" dentro del vector "Estuantes"
+        estudiantes.push_back(move(e));
+    }
+
+    stable_sort(estudiantes.begin(), estudiantes.end(), [](const Estudiante& a, const Estudiante& b) {
+        return a.nota < b.nota; 
+    });
+
+    for (const auto& e : estudiantes) {
+        cout << e.nombre << " tiene " << e.nota << "\n";
+    }
+
+    return 0;
+}
+ 
+
